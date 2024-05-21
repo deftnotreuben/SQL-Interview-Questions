@@ -1,0 +1,19 @@
+https://platform.stratascratch.com/coding/10172-best-selling-item?code_type=1
+
+SQL:
+WITH CTE AS (
+SELECT 
+    EXTRACT(MONTH FROM invoicedate) AS month,
+    description, 
+    SUM(unitprice * quantity) AS amount,
+    RANK() OVER(PARTITION BY EXTRACT(MONTH FROM invoicedate) ORDER BY SUM(unitprice * quantity) DESC) AS rnk
+FROM online_retail
+GROUP BY month, description)
+
+
+SELECT 
+    description,
+    month,
+    amount
+FROM CTE
+WHERE rnk = 1
