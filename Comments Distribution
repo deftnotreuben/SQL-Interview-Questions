@@ -1,0 +1,21 @@
+Q: https://platform.stratascratch.com/coding/10297-comments-distribution?code_type=1
+SQL:
+WITH CTE1 AS
+(
+    SELECT 
+        id,
+        COUNT(id) AS n_comments
+    FROM fb_users u
+    JOIN fb_comments c
+        ON u.id = c.user_id
+    WHERE (EXTRACT(YEAR FROM joined_at) BETWEEN 2018 AND 2020)
+    AND (created_at BETWEEN '2020-01-01' AND '2020-01-31')
+    AND created_at > joined_at
+    GROUP BY id
+    ORDER BY n_comments
+)
+
+SELECT n_comments, COUNT(id)
+FROM CTE1
+GROUP BY n_comments
+ORDER BY n_comments
