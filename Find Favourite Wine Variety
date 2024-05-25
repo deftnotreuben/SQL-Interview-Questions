@@ -1,0 +1,21 @@
+Q: https://platform.stratascratch.com/coding/10037-find-favourite-wine-variety?code_type=1
+SQL:
+WITH CTE AS (
+SELECT
+    taster_name,
+    variety,
+    COUNT(id) AS num,
+    DENSE_RANK() OVER(PARTITION BY taster_name ORDER BY COUNT(id) DESC) AS rnk
+FROM 
+    winemag_p2
+GROUP BY 
+    taster_name, variety
+)
+
+SELECT 
+    taster_name,
+    variety
+FROM 
+    CTE
+WHERE rnk =1
+AND taster_name IS NOT NULL
