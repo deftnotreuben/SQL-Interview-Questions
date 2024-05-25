@@ -1,0 +1,14 @@
+https://platform.stratascratch.com/coding/2146-department-manager-and-employee-salary-comparison?code_type=1
+SQL:
+SELECT
+    e1.department,
+    e1.id AS employee_id,
+    e1.salary AS employee_salary,
+    e2.salary AS manager_salary,
+    ROUND(AVG(e1.salary) OVER(PARTITION BY e1.department),0) AS avg_salary
+FROM 
+    employee_o e1
+JOIN 
+    employee_o e2
+ON
+    e1.manager_id = e2.id AND e1.id != e2.manager_id
