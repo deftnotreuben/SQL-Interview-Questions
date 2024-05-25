@@ -1,0 +1,22 @@
+Q: https://platform.stratascratch.com/coding/9606-differences-in-movie-ratings?code_type=1
+SQL:
+WITH CTE1 AS (
+SELECT 
+    *,
+    AVG(rating) OVER(PARTITION BY name) AS avg_rating,
+    RANK() OVER(PARTITION BY name ORDER BY id DESC) AS rnk
+FROM nominee_filmography
+WHERE rating IS NOT NULL AND role_type = 'Normal Acting'
+)
+,CTE2 AS (
+SELECT *
+FROM CTE1
+WHERE rnk IN (2)
+)
+
+SELECT 
+    name,
+    rating AS second_last_rating,
+    avg_rating AS lifetime_rating,
+    ABS(rating - avg_rating) AS variance
+FROM CTE2
