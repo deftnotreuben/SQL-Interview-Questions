@@ -1,0 +1,37 @@
+Q: https://platform.stratascratch.com/coding/2033-find-the-most-profitable-location?code_type=1
+SQL:
+WITH CTE1 AS(
+SELECT
+    location,
+    AVG(amt) AS avg_transaction_amount
+FROM
+    signups s
+LEFT JOIN 
+    transactions t
+    ON s.signup_id = t.signup_id
+GROUP BY 
+    location
+)
+,CTE2 AS
+(
+    SELECT
+        location,
+        AVG(signup_stop_date - signup_start_date) AS avg_signup_duration
+    FROM
+        signups
+    GROUP BY 
+        location
+)
+
+SELECT
+    CTE1.location,
+    avg_transaction_amount,
+    avg_signup_duration,
+    avg_transaction_amount/avg_signup_duration AS ratio
+FROM 
+    CTE1
+JOIN 
+    CTE2
+    ON CTE1.location = CTE2.location
+ORDER BY
+    ratio DESC
