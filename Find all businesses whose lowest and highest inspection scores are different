@@ -1,0 +1,20 @@
+Q: https://platform.stratascratch.com/coding/9731-find-all-businesses-whose-lowest-and-highest-inspection-scores-are-different?code_type=1
+SQL:
+WITH CTE AS
+(SELECT
+    business_name,
+    MIN(inspection_score) AS lowest_score,
+    MAX(inspection_score) AS highest_score
+FROM 
+    sf_restaurant_health_violations
+GROUP BY 
+    business_name
+)
+SELECT 
+    business_name,
+    lowest_score,
+    highest_score
+FROM 
+    CTE
+WHERE
+    lowest_score <> highest_score
