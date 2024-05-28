@@ -1,0 +1,24 @@
+Q: https://platform.stratascratch.com/coding/10017-year-over-year-churn?code_type=1
+SQL:
+WITH CTE AS (
+SELECT
+    DATE_PART('year', end_date) AS year,
+    COUNT(index) AS current_year_num,
+    COALESCE(LAG(COUNT(index),1) OVER (ORDER BY DATE_PART('year', end_date)),0) AS prev_year
+FROM
+    lyft_drivers
+WHERE 
+    DATE_PART('year', end_date) IS NOT NULL
+GROUP BY
+    DATE_PART('year', end_date)
+)
+
+
+SELECT
+    year,
+    current_year_num,
+    prev_year,
+    CASE WHEN current_year_num > prev_year THEN 'increase'
+         WHEN current_year_num < prev_year THEN 'decrease'
+         ELSE 'no change' END AS COND
+FROM CTE
