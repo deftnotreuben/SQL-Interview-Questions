@@ -1,0 +1,21 @@
+Q: https://platform.stratascratch.com/coding/10081-find-the-number-of-employees-who-received-the-bonus-and-who-didnt?code_type=1
+SQL:
+WITH CTE AS (
+SELECT
+    *,
+    CASE WHEN b.bonus_amount IS NOT NULL THEN 1 ELSE 0 END AS has_bonus
+FROM
+    employee e
+LEFT JOIN 
+    bonus b
+    ON e.id = b.worker_ref_id
+)
+
+
+
+SELECT 
+    has_bonus,
+    COUNT(DISTINCT id) AS n_employees
+FROM CTE
+GROUP BY
+    has_bonus
