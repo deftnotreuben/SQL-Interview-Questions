@@ -1,0 +1,14 @@
+Q: https://platform.stratascratch.com/coding/9708-find-the-variance-and-the-standard-deviation-of-scores-that-have-grade-a?code_type=1
+SQL:
+WITH CTE1 AS
+(SELECT CAST(score AS FLOAT) AS x_i,
+    AVG(CAST(score AS FLOAT)) OVER() AS mean_x
+FROM
+    los_angeles_restaurant_health_inspections
+WHERE 
+    grade = 'A')
+
+SELECT 
+    AVG((x_i - mean_x) * (x_i - mean_x)) AS var,
+    SQRT(AVG((x_i - mean_x) * (x_i - mean_x))) AS std_dev
+FROM CTE1
