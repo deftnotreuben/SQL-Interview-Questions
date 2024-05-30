@@ -1,0 +1,24 @@
+Q: https://platform.stratascratch.com/coding/10299-finding-updated-records?code_type=1
+SQL:
+WITH CTE AS 
+(
+SELECT
+    id,
+    first_name,
+    last_name,
+    department_id,
+    salary,
+    RANK() OVER(PARTITION BY id ORDER BY salary DESC) AS rnk
+FROM
+    ms_employee_salary
+)
+
+SELECT 
+    id,
+    first_name,
+    last_name,
+    department_id,
+    salary
+FROM
+    CTE
+WHERE rnk = 1
