@@ -18,3 +18,15 @@ FROM
     worker, CTE
 WHERE 
     worker_id <= total_rows/2
+
+Sol 2:
+SELECT
+    *
+FROM
+    worker
+WHERE
+    worker_id <=
+    (
+    SELECT COUNT(worker_id)/2
+    FROM worker
+    )
