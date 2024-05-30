@@ -1,0 +1,20 @@
+Q: https://platform.stratascratch.com/coding/9859-find-the-first-50-records-of-the-dataset?code_type=1
+SQL:
+WITH CTE AS (
+SELECT
+    COUNT(worker_id) AS total_rows    
+FROM 
+    worker
+)
+
+SELECT
+    worker_id,
+    first_name,
+    last_name,
+    salary,
+    joining_date,
+    department
+FROM 
+    worker, CTE
+WHERE 
+    worker_id <= total_rows/2
