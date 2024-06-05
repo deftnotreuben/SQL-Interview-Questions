@@ -1,0 +1,29 @@
+Q: https://platform.stratascratch.com/coding/2044-most-senior-junior-employee?code_type=1
+SQL:
+WITH CTE AS (
+SELECT
+    (CURRENT_DATE - hire_date) AS tenure,
+    COUNT(DISTINCT id) AS num_emps
+FROM
+    uber_employees
+WHERE 
+    termination_date IS NULL
+GROUP BY
+    tenure
+)
+
+,CTE2 AS (
+SELECT 
+    *,
+    RANK() OVER(ORDER BY tenure DESC) AS rnk1,
+    RANK() OVER(ORDER BY tenure) AS rnk2
+FROM 
+    CTE
+)
+
+SELECT
+    (SELECT num_emps FROM CTE2 WHERE rnk1 = 1) AS most_tenure,
+    (SELECT num_emps FROM CTE2 WHERE rnk2 = 1) AS least_tenure,
+    MAX(tenure) - MIN(tenure) AS diff
+FROM
+    CTE2
