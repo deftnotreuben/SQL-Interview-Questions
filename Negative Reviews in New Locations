@@ -1,0 +1,39 @@
+Q: https://platform.stratascratch.com/coding/2087-negative-reviews-in-new-locations?code_type=1
+SQL:
+-- negative reviews
+-- negative -> score < 5
+-- second half of 2021
+-- name, ratio of neg to pos
+
+WITH CTE AS(
+SELECT
+    name,
+    SUM(CASE WHEN score < 5 THEN 1 ELSE 0 END) AS negative_reviews,
+    SUM(CASE WHEN score >= 5 THEN 1 ELSE 0 END) AS positive_reviews
+FROM
+    instacart_reviews r
+JOIN
+    instacart_stores s
+    ON
+        r.store_id = s.id
+WHERE
+    opening_date > '2021-06-30'
+GROUP BY
+    name
+)
+
+,ratio_CTE AS(
+SELECT
+    name,
+    (negative_reviews::float/positive_reviews::float) AS ratio,
+    negative_reviews + positive_reviews AS total,
+    (negative_reviews * 100/(negative_reviews + positive_reviews)) AS perc
+FROM 
+    CTE
+)
+
+SELECT
+    name, ratio
+FROM ratio_CTE
+WHERE
+  perc >20
