@@ -1,0 +1,11 @@
+Q: https://platform.stratascratch.com/coding/10162-number-of-acquisitions?code_type=1
+SQL:
+SELECT
+    acquired_quarter,
+    COUNT(DISTINCT id) AS num
+FROM
+    crunchbase_acquisitions
+GROUP BY
+    acquired_quarter
+ORDER BY
+    num DESC
