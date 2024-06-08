@@ -1,0 +1,24 @@
+Q: https://platform.stratascratch.com/coding/10284-popularity-percentage?code_type=1
+SQL:
+WITH friends_CTE AS (
+SELECT
+    user1,
+    user2
+FROM
+    facebook_friends
+UNION ALL
+SELECT
+    user2 AS user1,
+    user1 AS user2
+FROM
+    facebook_friends
+)
+
+SELECT
+    user1,
+    --COUNT(*)::float,
+    --(SELECT COUNT(DISTINCT user1) FROM facebook_friends) AS tot
+    COUNT(DISTINCT user2)::float/(SELECT COUNT(DISTINCT user1) FROM friends_CTE)*100 AS pop_r
+FROM friends_CTE 
+GROUP BY
+    user1
