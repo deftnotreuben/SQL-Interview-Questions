@@ -1,0 +1,41 @@
+Q: https://platform.stratascratch.com/coding/2028-new-and-existing-users/solutions?code_type=1
+SQL:
+-- month, new_users, old_users
+
+-- new_users -> started in current month
+-- old_users -> used in current month but also in prev months
+WITH joining_date_CTE AS(
+SELECT
+    user_id,
+    MIN(time_id) AS join_date
+FROM
+    fact_events
+GROUP BY
+    1
+)
+, new_users_CTE AS(
+SELECT
+    EXTRACT(MONTH FROM join_date) AS month,
+    COUNT(DISTINCT user_id) AS new_users
+FROM
+    joining_date_CTE
+GROUP BY
+    month
+)
+, all_users_CTE AS (
+SELECT
+    EXTRACT(MONTH FROM time_id) AS month,
+    COUNT(DISTINCT user_id) AS all_users
+FROM
+    fact_events
+GROUP BY 1
+)
+SELECT 
+    nu.month,
+    new_users/all_users::float AS share_new_users,
+    1- (new_users/all_users::float) AS existing_share
+FROM 
+    new_users_CTE nu
+JOIN 
+    all_users_CTE au
+    ON nu.month=au.month
