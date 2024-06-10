@@ -1,0 +1,7 @@
+Q: https://platform.stratascratch.com/coding/10160-rank-guests-based-on-their-ages?code_type=1
+SQL:
+SELECT
+    guest_id,
+    RANK() OVER(ORDER BY age DESC) AS rnk
+FROM
+    airbnb_guests
