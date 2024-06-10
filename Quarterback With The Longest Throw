@@ -1,0 +1,9 @@
+Q: https://platform.stratascratch.com/coding/9966-quarterback-with-the-longest-throw?code_type=1
+SQL:
+SELECT qb, NULLIF(regexp_replace(lg, '\D','','g'), '')::numeric AS lg_num
+FROM
+    qbstats_2015_2016
+WHERE lg = (
+SELECT MAX(lg)
+FROM qbstats_2015_2016
+)
