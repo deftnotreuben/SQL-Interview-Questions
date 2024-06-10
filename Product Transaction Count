@@ -1,0 +1,29 @@
+Q: https://platform.stratascratch.com/coding/10163-product-transaction-count?code_type=1
+SQL:
+--num_of_trans for each prod
+-- cols: prod name, num_of_trans
+-- order by: prod_id in asc
+WITH grouped_date AS (
+SELECT
+    product_name,
+    i.product_id,
+    COUNT(DISTINCT transaction_id) AS num_of_transactions
+FROM
+    excel_sql_inventory_data i
+JOIN
+    excel_sql_transaction_data t
+    ON
+        i.product_id = t.product_id
+GROUP BY
+    product_name, i.product_id
+ORDER BY
+    i.product_id
+)
+
+SELECT
+    product_name,
+    num_of_transactions
+FROM
+    grouped_date
+    
+
