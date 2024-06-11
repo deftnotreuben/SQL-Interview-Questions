@@ -28,3 +28,14 @@ WHERE
 SELECT
     m1-m2 AS diff
 FROM CTE_1, CTE_2
+
+
+Soln2:
+SELECT
+    ABS(MAX(CASE WHEN department='marketing' THEN salary END) - MAX(CASE WHEN department='engineering' THEN salary END)) AS diff
+FROM 
+    db_employee e 
+JOIN 
+    db_dept d
+    ON 
+        e.department_id=d.id
