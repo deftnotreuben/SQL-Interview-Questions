@@ -1,0 +1,30 @@
+Q: https://platform.stratascratch.com/coding/10308-salaries-differences?code_type=1
+SQL:
+WITH CTE_1 AS (
+SELECT
+    MAX(salary) AS m1
+FROM
+    db_employee e
+JOIN
+    db_dept d
+    ON 
+        e.department_id = d.id
+WHERE 
+    department = 'marketing'
+)
+, CTE_2 AS (
+SELECT
+    MAX(salary) AS m2
+FROM
+    db_employee e
+JOIN
+    db_dept d
+    ON 
+        e.department_id = d.id
+WHERE 
+    department = 'engineering'
+)
+
+SELECT
+    m1-m2 AS diff
+FROM CTE_1, CTE_2
