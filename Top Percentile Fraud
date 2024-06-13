@@ -1,0 +1,27 @@
+Q: https://platform.stratascratch.com/coding/10303-top-percentile-fraud?code_type=1
+SQL:
+WITH cte_rank AS
+(
+SELECT
+    state,
+    --PERCENTILE_CONT(0.05) OVER(PARTITION BY state ORDER BY fraud_score DESC) AS rnk,
+    PERCENTILE_CONT(0.05) WITHIN GROUP(ORDER BY fraud_score DESC) AS rnk
+FROM 
+    fraud_score
+GROUP BY
+    state
+)
+
+SELECT
+    policy_num,
+    f.state,
+    claim_cost,
+    fraud_score
+FROM
+    fraud_score f
+JOIN
+    cte_rank c
+    ON
+        f.state = c.state
+WHERE 
+    fraud_score >= rnk
