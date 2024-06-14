@@ -1,0 +1,38 @@
+Q: https://platform.stratascratch.com/coding/2012-viewers-turned-streamers?code_type=1
+SQL:
+WITH CTE1 AS (
+SELECT
+    user_id,
+    MIN(session_start) AS first_session
+FROM
+    twitch_sessions
+GROUP BY
+    user_id
+)
+
+,viewer_CTE AS
+(
+SELECT c1.user_id
+FROM twitch_sessions s
+JOIN
+    CTE1 c1
+    ON
+        s.user_id = c1.user_id AND c1.first_session = s.session_start
+WHERE session_type = 'viewer'
+)
+
+SELECT 
+    c2.user_id,
+    COUNT(session_id) AS num_of_sessions
+FROM
+    twitch_sessions s1
+JOIN
+    viewer_CTE c2
+    ON 
+        c2.user_id = s1.user_id
+WHERE
+    session_type = 'streamer'
+GROUP BY
+    c2.user_id
+ORDER BY
+    c2.user_id
