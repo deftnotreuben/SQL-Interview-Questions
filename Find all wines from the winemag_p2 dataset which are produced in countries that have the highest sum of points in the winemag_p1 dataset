@@ -1,0 +1,25 @@
+Q: https://platform.stratascratch.com/coding/10040-find-all-wines-from-the-winemag_p2-dataset-which-are-produced-in-countries-that-have-the-highest-sum-of-points-in-the-winemag_p1-dataset?code_type=1
+SQL:
+WITH country_rnk AS (
+SELECT 
+    country,
+    SUM(points) AS tot_points,
+    RANK() OVER(ORDER BY SUM(points) DESC) AS rnk
+FROM 
+    WINEMAG_P1
+GROUP BY
+    country
+)
+
+SELECT
+    p2.*
+FROM
+    winemag_p2 p2
+JOIN
+    country_rnk c
+    ON
+        p2.country = c.country
+WHERE
+    rnk = 1
+    
+    
