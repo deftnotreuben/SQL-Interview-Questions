@@ -1,0 +1,30 @@
+Q: https://platform.stratascratch.com/coding/9957-find-how-the-average-male-height-changed-between-each-olympics-from-1896-to-2016?code_type=1
+SQL: 
+WITH DIS_CTE AS (
+SELECT
+    DISTINCT year, id, height, sex
+FROM
+    olympics_athletes_events
+)
+,AVG_CTE AS (
+SELECT
+    year,
+    AVG(height) AS avg_height
+FROM
+    DIS_CTE
+WHERE
+    sex = 'M'
+GROUP BY
+    year
+ORDER BY
+    year
+)
+
+SELECT
+    year,
+    avg_height,
+    LAG(avg_height,1, 172.73) OVER(ORDER BY year) AS prev_avg,
+    avg_height - LAG(avg_height,1, 172.73) OVER(ORDER BY year) AS diff
+FROM
+    AVG_CTE
+    
